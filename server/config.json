@@ -1,0 +1,11 @@
+{
+  "gamePort": 9000,
+  "policyPort": 843,
+  "debug": true,
+  "adminPassword": "lolol",
+  
+  "domains": [
+    "localhost",
+    "*"
+  ]
+}

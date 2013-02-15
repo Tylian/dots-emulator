@@ -1,0 +1,16 @@
+{
+  "name": "dots-emulator",
+  "version": "1.0.0",
+  "description": "A Click Upon Dots server emulator",
+  "main": "app.js",
+  "dependencies": {
+    "winston": "~0.6.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Tylian",
+  "license": "BSD"
+}
