@@ -11,6 +11,6 @@ pids
 logs
 results
 
-client/source
+client/source/
 
 npm-debug.log
