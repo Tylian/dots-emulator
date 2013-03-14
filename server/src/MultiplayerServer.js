@@ -11,24 +11,13 @@ function MultiplayerServer() {
 	this.users = [];
 
 	var _parent = this;
-	this.User = function(socket) {
-		this.socket = socket;
-	}
-	this.User.prototype.write = function() {
-		for(var i = 0; i < arguments.length; i++) {
-			this.socket.write.call(this.socket, arguments[i] + '\0');
-		}
-	}
-	this.User.prototype.writeOthers = function() {
-		_parent.writeAllBut.apply(_parent, [this].concat(_slice.call(arguments)));
-	}
 }
 util.inherits(MultiplayerServer, events.EventEmitter);
 
 MultiplayerServer.prototype.start = function(port, callback) {
 	var self = this; // Just incase?
 	this.server = net.createServer(function(socket) {
-		var user = new self.User(socket);
+		var user = new MultiplayerUser(socket, self);
 
 		self.users.push(user);
 		self.emit('connection', user);
@@ -83,6 +72,19 @@ MultiplayerServer.prototype.writeFiltered = function() {
 
 MultiplayerServer.prototype.each = function(callback, thisArg) {
 	this.users.forEach.call(this.users, callback, thisArg);
+}
+
+function MultiplayerUser(socket, parent) {
+	this.socket = socket;
+	this.parent = parent;
+}
+MultiplayerUser.prototype.write = function() {
+	for(var i = 0; i < arguments.length; i++) {
+		this.socket.write.call(this.socket, arguments[i] + '\0');
+	}
+}
+MultiplayerUser.prototype.writeOthers = function() {
+	this.parent.writeAllBut.apply(this.parent, [this].concat(_slice.call(arguments)));
 }
 
 module.exports = MultiplayerServer;
