@@ -49,8 +49,8 @@ function LobbyServer() {
 
             lobby.rooms[room].started = false;
             lobby.rooms[room].users.forEach(function(roomUser) {
+              server.writeAll('l' + roomUser.room + '`' + roomUser.fullname);
               roomUser.room = 'none';
-              server.writeAll('j' + roomUser.room + '`' + roomUser.fullname);
             });
             
             server.writeAll('r' + room);
@@ -58,7 +58,7 @@ function LobbyServer() {
           }
 
           user.write('g');
-          // Continues into "join lobby" packet
+          break;
           
         case 'o': // Join lobby
           user.writeOthers('j' + user.room + '`' + user.fullname);
@@ -91,9 +91,10 @@ function LobbyServer() {
           // Even worse, if they're in the "none" room, sending them to the current room doesn't unlock the client.
           // So to work around this, we move them to their current room, or the room they requested then back if they're in "none".
           if(!lobby.isValidRoom(data.substr(1))) {
-            if(user.room == "none")
+            if(user.room == 'none')
               user.write('j' + data.substr(1) + '`' + user.fullname);
-            
+
+            user.write('l' + user.room + '`' + user.fullname);
             user.write('j' + user.room + '`' + user.fullname);
             break;
           }
@@ -143,7 +144,7 @@ function LobbyServer() {
           case '/debug':
             if(!user.admin) return;
             config.debug = !config.debug;
-            message = '<b>Debug mode ' + (config.debug ? 'enabled' : 'disabled') + '.</b>';
+            server.writeAll('c<b>Debug mode ' + (config.debug ? 'enabled' : 'disabled') + '.</b>');
             return;
         }
       }

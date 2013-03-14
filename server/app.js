@@ -12,5 +12,3 @@ winston.info('Begining startup of ' + package.name + ' v' + package.version);
 
 var policyServer = new PolicyServer();
 var lobbyServer = new LobbyServer();
-
-// TODO: Graceful shutdown
