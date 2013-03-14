@@ -1,7 +1,7 @@
 {
   "gamePort": 9000,
   "policyPort": 843,
-  "debug": true,
+  "debug": false,
   "adminPassword": "lolol",
   
   "domains": [
