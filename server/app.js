@@ -1,6 +1,6 @@
-var PolicyServer = require('./libs/PolicyServer'),
-    LobbyServer = require('./libs/LobbyServer'),
-    GameServer = require('./libs/GameServer');
+var PolicyServer = require('./src/PolicyServer'),
+    LobbyServer = require('./src/LobbyServer'),
+    GameServer = require('./src/GameServer');
     
 // Set up the logger
 var winston = require('winston');
