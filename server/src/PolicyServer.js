@@ -3,25 +3,31 @@ var net = require("net"),
     config = require('../config');
 
 function PolicyServer() {
+  var policyFile = "<?xml version=\"1.0\"?>\n";
+  policyFile += "<!DOCTYPE cross-domain-policy SYSTEM \"http://www.adobe.com/xml/dtds/cross-domain-policy.dtd\">\n";
+  policyFile += "<cross-domain-policy>\n";
+  policyFile += "<site-control permitted-cross-domain-policies=\"master-only\" />\n";
+
+  for(var i in config.domains) {
+    policyFile += "<allow-access-from domain=\""+config.domains[i]+"\" to-ports=\""+config.gamePort+","+(config.gamePort + 1)+"-"+(config.gamePort + 12)+"\" secure=\"false\" />\n";
+  }
+
+  policyFile += "</cross-domain-policy>";
+
+  // Start the server
   var server = net.createServer(function(socket) {
+    socket.setEncoding('utf8');
     socket.on('data', function(data) {
-      if(data == "<policy-file-request/>\0") {
+      if(data.indexOf("<policy-file-request/>") > -1) {
         logger.info('Responding to policy request from ' + socket.address().address);
 
-        socket.write("<?xml version=\"1.0\"?>\n");
-        socket.write("<!DOCTYPE cross-domain-policy SYSTEM \"http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd\">\n");
-        socket.write("<cross-domain-policy>\n");
-        socket.write("<site-control permitted-cross-domain-policies=\"master-only\" />\n");
-
-        var portRange = [config.gamePort + 1, config.gamePort + 12];
-        config.domains.forEach(function(domain) {
-          socket.write("<allow-access-from domain=\""+config.domain+"\" to-ports=\""+config.gamePort+","+portRange[0]+"-"+portRange[1]+"\" secure=\"false\" />\n");
-        });
-
-        socket.write("</cross-domain-policy>\0");
+        socket.write(policyFile + "\0");
         socket.end();   
       }
-    }); 
+    });
+    socket.on('end', function() {
+      socket.end();
+    }) 
   })
   server.listen(config.policyPort, function() {
     logger.info('Flash policy server running on port ' + config.policyPort);
