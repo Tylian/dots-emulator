@@ -11,9 +11,9 @@ function PolicyServer() {
     socket.write("<cross-domain-policy>\n");
     socket.write("<site-control permitted-cross-domain-policies=\"master-only\"/>\n");
 
+    var portRange = [config.gamePort + 1, config.gamePort + 12];
     config.domains.forEach(function(domain) {
-      var portRange = [config.gamePort, config.gamePort + config.gameRooms];
-      socket.write("<allow-access-from domain=\""+config.domain+"\" to-ports=\""+config.lobbyPort+","+portRange[0]+"-"+portRange[1]+"\"/>\n");
+      socket.write("<allow-access-from domain=\""+config.domain+"\" to-ports=\""+config.gamePort+","+portRange[0]+"-"+portRange[1]+"\"/>\n");
     });
 
     socket.write("</cross-domain-policy>\n");
