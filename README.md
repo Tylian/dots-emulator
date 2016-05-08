@@ -1,4 +1,4 @@
-dots-emulator v1.1.0
+dots-emulator
 =============
 A server emulator for the game Click Upon Dots by Jiggmin.
 
@@ -7,7 +7,7 @@ Usage
 =====
     cd server
     npm install
-    node app.js
+    node . | bunyan
 
 Edit your `/etc/hosts` file and add the line
 
