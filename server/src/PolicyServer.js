@@ -1,6 +1,9 @@
-var net = require("net"),
-    logger = require('winston'),
-    config = require('../config');
+'use strict';
+
+var net = require("net")
+  , bunyan = require('bunyan')
+  , config = require('../config')
+  , log = bunyan.createLogger({ name: "policy" });
 
 function PolicyServer() {
   var policyFile = "<?xml version=\"1.0\"?>\n";
@@ -19,18 +22,18 @@ function PolicyServer() {
     socket.setEncoding('utf8');
     socket.on('data', function(data) {
       if(data.indexOf("<policy-file-request/>") > -1) {
-        logger.info('Responding to policy request from ' + socket.address().address);
+        log.info('Responding to policy request from %s', socket.address().address);
 
         socket.write(policyFile + "\0");
-        socket.end();   
+        socket.end();
       }
     });
     socket.on('end', function() {
       socket.end();
-    }) 
+    })
   })
   server.listen(config.policyPort, function() {
-    logger.info('Flash policy server running on port ' + config.policyPort);
+    log.info('Flash policy server running on port %d', config.policyPort);
   });
 }
 
