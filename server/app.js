@@ -1,3 +1,5 @@
+'use strict';
+
 var PolicyServer = require('./src/PolicyServer'),
     LobbyServer = require('./src/LobbyServer'),
     GameServer = require('./src/GameServer');
